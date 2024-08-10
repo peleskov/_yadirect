@@ -1,0 +1,157 @@
+.ya-preview {
+    width: 628px;
+    background-color: #fff;
+    padding: 20px;
+    @include box-shadow;
+    border-radius: 8px;
+    box-sizing: border-box;
+
+    .d-flex {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+        line-height: 24px;
+        color: #000080;
+        font-weight: 400;
+        text-wrap: wrap;
+        white-space-collapse: collapse;
+        overflow-wrap: break-word;
+        cursor: pointer;
+
+        &:hover {
+            color: #dd0000;
+        }
+    }
+
+
+    .ya-url {
+        display: block;
+        font-size: 14px;
+        color: #006000;
+        text-decoration: none;
+
+        &:hover {
+            color: #dd0000;
+        }
+
+        span {
+            margin: 0 .3em;
+            font-size: 10px;
+            line-height: 1;
+        }
+    }
+
+    .ya-ad {
+        margin-left: 8px;
+        font-size: 14px;
+        color: #006000;
+    }
+
+    .ya-text {
+        margin: 0;
+        font-size: 14px;
+        color: #333333;
+        line-height: 1.5;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+
+    .ya-contact,
+    .ya-quick-links {
+        margin-top: 4px;
+        font-size: 13px;
+
+        >span {
+            position: relative;
+            padding-left: 16px;
+
+            &:before {
+                display: inline-block;
+                position: absolute;
+                top: 8px;
+                left: 8px;
+                width: 2px;
+                height: 2px;
+                content: "";
+                vertical-align: middle;
+                border-radius: 50%;
+                background-color: #333;
+            }
+
+            &:first-child {
+                padding-left: 0;
+
+                &::before {
+                    display: none;
+                }
+            }
+        }
+
+        a {
+            color: #000080;
+            text-decoration: none;
+
+            &:hover {
+                color: #dd0000;
+            }
+        }
+    }
+
+    .ya-quick-links {
+        height: 17px;
+        overflow: hidden;
+
+        >span {
+            display: inline-block;
+        }
+
+        a {
+            white-space: nowrap;
+        }
+    }
+
+    .ya-additional-quick-links {
+        margin: 20px 22px 8px;
+
+        .Sitelinks-Item {
+            width: 50%;
+            vertical-align: top;
+
+            &:nth-child(odd) {
+                padding-right: 8px;
+            }
+
+            &:nth-child(even) {
+                padding-left: 8px;
+            }
+
+            &:nth-child(n+3) {
+                margin-top: 20px;
+            }
+
+            a {
+                font-size: 18px;
+                line-height: 24px;
+                color: #000080;
+                text-decoration: none;
+
+                &:hover {
+                    color: #dd0000;
+                }
+            }
+
+            .description {
+                font-size: 13px;
+                line-height: 16px;
+                color: #333;
+            }
+        }
+
+    }
+}

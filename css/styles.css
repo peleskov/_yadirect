@@ -1,0 +1,142 @@
+body {
+  background-color: #fbfbfb;
+}
+
+.tab-content {
+  background-color: #fff;
+}
+
+.ya-preview {
+  width: 628px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 12px 0 rgba(13, 35, 67, 0.031372549);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+.ya-preview .d-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+.ya-preview h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000080;
+  font-weight: 400;
+  text-wrap: wrap;
+  white-space-collapse: collapse;
+  overflow-wrap: break-word;
+  cursor: pointer;
+}
+.ya-preview h3:hover {
+  color: #dd0000;
+}
+.ya-preview .ya-url {
+  display: block;
+  font-size: 14px;
+  color: #006000;
+  text-decoration: none;
+}
+.ya-preview .ya-url:hover {
+  color: #dd0000;
+}
+.ya-preview .ya-url span {
+  margin: 0 0.3em;
+  font-size: 10px;
+  line-height: 1;
+}
+.ya-preview .ya-ad {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #006000;
+}
+.ya-preview .ya-text {
+  margin: 0;
+  font-size: 14px;
+  color: #333333;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.ya-preview .ya-contact,
+.ya-preview .ya-quick-links {
+  margin-top: 4px;
+  font-size: 13px;
+}
+.ya-preview .ya-contact > span,
+.ya-preview .ya-quick-links > span {
+  position: relative;
+  padding-left: 16px;
+}
+.ya-preview .ya-contact > span:before,
+.ya-preview .ya-quick-links > span:before {
+  display: inline-block;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 2px;
+  height: 2px;
+  content: "";
+  vertical-align: middle;
+  border-radius: 50%;
+  background-color: #333;
+}
+.ya-preview .ya-contact > span:first-child,
+.ya-preview .ya-quick-links > span:first-child {
+  padding-left: 0;
+}
+.ya-preview .ya-contact > span:first-child::before,
+.ya-preview .ya-quick-links > span:first-child::before {
+  display: none;
+}
+.ya-preview .ya-contact a,
+.ya-preview .ya-quick-links a {
+  color: #000080;
+  text-decoration: none;
+}
+.ya-preview .ya-contact a:hover,
+.ya-preview .ya-quick-links a:hover {
+  color: #dd0000;
+}
+.ya-preview .ya-quick-links {
+  height: 17px;
+  overflow: hidden;
+}
+.ya-preview .ya-quick-links > span {
+  display: inline-block;
+}
+.ya-preview .ya-quick-links a {
+  white-space: nowrap;
+}
+.ya-preview .ya-additional-quick-links {
+  margin: 20px 22px 8px;
+}
+.ya-preview .ya-additional-quick-links .Sitelinks-Item {
+  width: 50%;
+  vertical-align: top;
+}
+.ya-preview .ya-additional-quick-links .Sitelinks-Item:nth-child(odd) {
+  padding-right: 8px;
+}
+.ya-preview .ya-additional-quick-links .Sitelinks-Item:nth-child(even) {
+  padding-left: 8px;
+}
+.ya-preview .ya-additional-quick-links .Sitelinks-Item:nth-child(n+3) {
+  margin-top: 20px;
+}
+.ya-preview .ya-additional-quick-links .Sitelinks-Item a {
+  font-size: 18px;
+  line-height: 24px;
+  color: #000080;
+  text-decoration: none;
+}
+.ya-preview .ya-additional-quick-links .Sitelinks-Item a:hover {
+  color: #dd0000;
+}
+.ya-preview .ya-additional-quick-links .Sitelinks-Item .description {
+  font-size: 13px;
+  line-height: 16px;
+  color: #333;
+}/*# sourceMappingURL=styles.css.map */
