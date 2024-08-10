@@ -93,11 +93,11 @@ function updateAdPreview() {
 
             if (title && url) {
                 if (index < 4) {
-                    quickLinksInfo.push(`<span><a href="${url}">${title}</a></span>`);
+                    quickLinksInfo.push(`<span><a href="#">${title}</a></span>`);
                 } else {
                     additionalQuickLinksInfo.push(`
                         <div class="Sitelinks-Item sitelinks__item">
-                            <a href="${url}">${title}</a>
+                            <a href="#">${title}</a>
                             <div class="description">${description}</div>
                         </div>
                     `);
