@@ -33,11 +33,13 @@ function updateAdPreview() {
     const displayUrl = document.getElementById('displayUrl');
     const phone = document.getElementById('phone');
     const workHours = document.getElementById('workHours');
-    const yaContactElement = document.getElementById('yaContact');
+    const yaContactElements = document.querySelectorAll('[data-id="yaContact"]');
+    const yaWorkTimeElements = document.querySelectorAll('[data-id="yaWorkTime"]');
+    const yaPhoneElements = document.querySelectorAll('[data-id="yaPhone"]');
     const combinedTitle = `${title1.value} ${title2.value}`.trim();
-    const yaTitleElement = document.getElementById('yaTitle');
-    const yaTextWithClarificationsElement = document.getElementById('yaTextWithClarifications');
-    const yaUrlElement = document.getElementById('yaUrl');
+    const yaTitleElements = document.querySelectorAll('[data-id="yaTitle"]');
+    const yaTextWithClarificationsElements = document.querySelectorAll('[data-id="yaTextWithClarifications"]');
+    const yaUrlElements = document.querySelectorAll('[data-id="yaUrl"]');
 
     validateInput(title1, { maxLength: 56, maxWordLength: 22, maxPunctuation: 15 });
     validateInput(title2, { maxLength: 30, maxWordLength: 22, maxPunctuation: 15 });
@@ -46,55 +48,100 @@ function updateAdPreview() {
     validateInput(url, { maxLength: 1024 });
     validateInput(displayUrl, { maxLength: 20 });
 
-    if (yaTitleElement) yaTitleElement.textContent = combinedTitle;
-    if (yaTextWithClarificationsElement) {
+    if (yaTitleElements) {
+        yaTitleElements.forEach(element => {
+            element.textContent = combinedTitle;
+        });
+    }
+    if (yaTextWithClarificationsElements) {
         let combinedText = text.value;
         if (clarifications.value) {
             combinedText += `&nbsp;· ${clarifications.value}`;
         }
-        yaTextWithClarificationsElement.innerHTML = combinedText;
+        yaTextWithClarificationsElements.forEach(element => {
+            element.innerHTML = combinedText;
+        });
     }
 
     const domainUrl = document.getElementById('domainUrl');
 
-    if (yaUrlElement) {
-        yaUrlElement.innerHTML = `<b>${domainUrl.value}</b><span>&gt;</span>${displayUrl.value}...`;
+    if (yaUrlElements) {
+        yaUrlElements.forEach(element => {
+            element.innerHTML = `<b>${domainUrl.value}</b><span>&#8250;</span>${displayUrl.value}&hellip;`;
+        });
     }
 
-    if (yaContactElement) {
+    if (yaContactElements) {
         let contactInfo = [];
         contactInfo.push(`<span><a href="#">Контактная информация</a></span>`);
         if (phone.value) contactInfo.push(`<span><a href="#">${phone.value} Показать</a></span>`);
         if (workHours.value) contactInfo.push(`<span>${workHours.value}</span>`);
 
-        yaContactElement.innerHTML = contactInfo.join('');
+        yaContactElements.forEach(element => {
+            element.innerHTML = contactInfo.join('');
+        });
+    }
+
+    if (yaWorkTimeElements && workHours.value) {
+        yaWorkTimeElements.forEach(element => {
+            element.innerHTML = `<div class="ya-companies-meta-item ya-worktime">${workHours.value}</div>`;
+        });
+    }
+
+    if (yaPhoneElements && phone.value) {
+        yaPhoneElements.forEach(element => {
+            element.innerHTML = `<div class="ya-companies-meta-item ya-phone"><a href="#">${phone.value}</a></div>`;
+        });
     }
 
     // Обновляем быстрые ссылки
-    const yaQuickLinksElement = document.getElementById('yaQuickLinks');
-    const yaAdditionalQuickLinksElement = document.getElementById('yaAdditionalQuickLinks');
-    if (yaQuickLinksElement && yaAdditionalQuickLinksElement) {
+    const yaQuickLinksElements = document.querySelectorAll('[data-id="yaQuickLinks"]');
+    const yaAdditionalQuickLinksElements = document.querySelectorAll('[data-id="yaAdditionalQuickLinks"]');
+    const quickLinks = document.querySelectorAll('.quick-link-item');
+
+    // Функция для валидации и получения данных ссылки
+    function getLinkData(link) {
+        const titleInput = link.querySelector('input[name="quickLinkTitle[]"]');
+        const descriptionInput = link.querySelector('input[name="quickLinkDescription[]"]');
+        const urlInput = link.querySelector('input[name="quickLinkUrl[]"]');
+
+        validateInput(titleInput, { maxLength: 30 });
+        validateInput(descriptionInput, { maxLength: 60 });
+        validateInput(urlInput, { maxLength: 1024 });
+
+        return {
+            title: titleInput.value,
+            url: urlInput.value,
+            description: descriptionInput.value
+        };
+    }
+
+    // Обработка yaQuickLinksElements
+    if (yaQuickLinksElements.length) {
         let quickLinksInfo = [];
-        let additionalQuickLinksInfo = [];
-        const quickLinks = document.querySelectorAll('.quick-link-item');
 
         quickLinks.forEach((link, index) => {
-            const titleInput = link.querySelector('input[name="quickLinkTitle[]"]');
-            const descriptionInput = link.querySelector('input[name="quickLinkDescription[]"]');
-            const urlInput = link.querySelector('input[name="quickLinkUrl[]"]');
-
-            validateInput(titleInput, { maxLength: 30 });
-            validateInput(descriptionInput, { maxLength: 60 });
-            validateInput(urlInput, { maxLength: 1024 });
-
-            const title = titleInput.value;
-            const url = urlInput.value;
-            const description = descriptionInput.value;
-
-            if (title && url) {
-                if (index < 4) {
+            if (index < 4) {
+                const { title, url } = getLinkData(link);
+                if (title && url) {
                     quickLinksInfo.push(`<span><a href="#">${title}</a></span>`);
-                } else {
+                }
+            }
+        });
+
+        yaQuickLinksElements.forEach(element => {
+            element.innerHTML = quickLinksInfo.join('');
+        });
+    }
+
+    // Обработка yaAdditionalQuickLinksElements
+    if (yaAdditionalQuickLinksElements.length) {
+        let additionalQuickLinksInfo = [];
+
+        quickLinks.forEach((link, index) => {
+            if (index >= 4) {
+                const { title, url, description } = getLinkData(link);
+                if (title && url) {
                     additionalQuickLinksInfo.push(`
                         <div class="Sitelinks-Item sitelinks__item">
                             <a href="#">${title}</a>
@@ -105,16 +152,19 @@ function updateAdPreview() {
             }
         });
 
-        yaQuickLinksElement.innerHTML = quickLinksInfo.join('');
-
         if (additionalQuickLinksInfo.length > 0) {
-            yaAdditionalQuickLinksElement.innerHTML = `
+            const additionalContent = `
                 <div class="d-flex flex-wrap">
                     ${additionalQuickLinksInfo.join('')}
                 </div>
             `;
+            yaAdditionalQuickLinksElements.forEach(element => {
+                element.innerHTML = additionalContent;
+            });
         } else {
-            yaAdditionalQuickLinksElement.innerHTML = '';
+            yaAdditionalQuickLinksElements.forEach(element => {
+                element.innerHTML = '';
+            });
         }
     }
 
