@@ -1,10 +1,18 @@
 let quickLinkCounter = 0;
+let copyLinkTooltip;
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('adForm');
     const inputs = form.querySelectorAll('input');
 
-    restoreFormData();
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    if (id) {
+        loadFormData(id);
+    } else {
+        restoreFormData();
+    }
+
     updateDomainUrl();
     updateAdPreview();
 
@@ -22,7 +30,109 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('addQuickLink').addEventListener('click', () => addQuickLink());
+    document.getElementById('copySaveButton').addEventListener('click', copySaveForm);
+    document.getElementById('clearFormButton').addEventListener('click', clearForm);
 });
+
+function clearForm() {
+    localStorage.removeItem('adFormData');
+    window.location.href = window.location.pathname;
+}
+
+function loadFormData(id) {
+    fetch(`includes/get_form_data.php?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                fillFormWithData(data.data);
+            } else {
+                console.error('Error loading form data:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function fillFormWithData(formData) {
+    // Fill form fields with the loaded data
+    Object.keys(formData).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+            element.value = formData[key];
+        }
+        
+    });
+
+    // Handle quick links separately
+    if (formData.quickLinks) {
+        const quickLinksFields = document.getElementById('quickLinksFields');
+        quickLinksFields.innerHTML = ''; // Clear existing quick links
+        formData.quickLinks.forEach(link => {
+            addQuickLink(link);
+        });
+    }
+    updateDomainUrl();
+    // Update the preview after filling the form
+    updateAdPreview();
+}
+
+function copySaveForm() {
+    const formData = localStorage.getItem('adFormData');
+
+    fetch('includes/save_form_data.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                //console.log('Succes:', data);
+                document.getElementById('formId').value = data.id;
+                saveFormData();
+                copyToClipboard();
+            } else {
+                console.error('Error:', data.error);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+function copyToClipboard() {
+    const formId = document.getElementById('formId').value;
+    const url = new URL(window.location.href);
+    url.searchParams.set('id', formId);
+    const link = url.toString();
+
+    const tooltipEl = document.getElementById('copySaveButton');
+    let tooltip = bootstrap.Tooltip.getInstance(tooltipEl);
+
+    if (!tooltip) {
+        tooltip = new bootstrap.Tooltip(tooltipEl, {
+            trigger: 'manual',
+            placement: 'top'
+        });
+    }
+
+    navigator.clipboard.writeText(link)
+        .then(() => {
+            tooltipEl.setAttribute('data-bs-original-title', 'Ссылка скопирована!');
+            tooltip.show();
+
+            setTimeout(() => tooltip.hide(), 2000);
+        })
+        .catch(err => {
+            tooltipEl.setAttribute('data-bs-original-title', 'Не удалось скопировать ссылку');
+            tooltip.show();
+
+            setTimeout(() => tooltip.hide(), 2000);
+        });
+}
 
 function updateAdPreview() {
     const title1 = document.getElementById('title1');
@@ -242,6 +352,7 @@ function toggleErrorVisibility(errorElement) {
 
 function saveFormData() {
     const formData = {
+        formId: document.getElementById('formId').value,
         title1: document.getElementById('title1').value,
         title2: document.getElementById('title2').value,
         text: document.getElementById('text').value,
@@ -262,6 +373,7 @@ function saveFormData() {
 function restoreFormData() {
     const savedData = JSON.parse(localStorage.getItem('adFormData'));
     if (savedData) {
+        document.getElementById('formId').value = savedData.formId || '';
         document.getElementById('title1').value = savedData.title1 || '';
         document.getElementById('title2').value = savedData.title2 || '';
         document.getElementById('text').value = savedData.text || '';
@@ -290,23 +402,23 @@ function addQuickLink(linkData = null) {
     const uniqueId = `ql_${quickLinkCounter++}`;
 
     newQuickLink.innerHTML = `
-        <div class="row g-2">
-            <div class="col-md-4">
+        <div class="row flex-column flex-lg-row g-2">
+            <div class="col-12 col-lg-4">
                 <label for="quickLinkTitle-${uniqueId}" class="form-label text-info">Заголовок <span class="text-info small text-opacity-50">(еще <span id="quickLinkTitle-${uniqueId}-count">30</span> символов)</span></label>
                 <input type="text" class="form-control" id="quickLinkTitle-${uniqueId}" name="quickLinkTitle[]" placeholder="Заголовок" maxlength="30">
                 <div class="invalid-feedback" id="quickLinkTitle-${uniqueId}-error"></div>
             </div>
-            <div class="col-md-4">
+            <div class="col-12 col-lg-4">
                 <label for="quickLinkDescription-${uniqueId}" class="form-label text-info">Описание <span class="text-info small text-opacity-50">(еще <span id="quickLinkDescription-${uniqueId}-count">60</span> символов)</span></label>
                 <input type="text" class="form-control" id="quickLinkDescription-${uniqueId}" name="quickLinkDescription[]" placeholder="Описание" maxlength="60">
                 <div class="invalid-feedback" id="quickLinkDescription-${uniqueId}-error"></div>
             </div>
-            <div class="col-md-3">
+            <div class="col-12 col-lg-3">
                 <label for="quickLinkUrl-${uniqueId}" class="form-label text-info">Ссылка</label>
                 <input type="url" class="form-control" id="quickLinkUrl-${uniqueId}" name="quickLinkUrl[]" placeholder="Ссылка" maxlength="1024">
                 <div class="invalid-feedback" id="quickLinkUrl-${uniqueId}-error"></div>
             </div>
-            <div class="col-md-1 d-flex align-items-end">
+            <div class="col-12 col-lg-1 d-flex align-items-end">
                 <button type="button" class="btn btn-outline-danger remove-quick-link">&times;</button>
             </div>
         </div>

@@ -6,6 +6,10 @@ body {
   background-color: #fff;
 }
 
+.btn {
+  height: 32px;
+}
+
 .ya-preview {
   width: 628px;
   background-color: #fff;
